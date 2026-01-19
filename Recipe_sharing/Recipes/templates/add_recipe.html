@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <h1 class="mb-4 display-6 fw-bold">Share a New Recipe</h1>
+
+        <form method="POST" enctype="multipart/form-data" class="needs-validation">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="title" class="form-label fw-bold">Recipe Title</label>
+                <input type="text" id="title" name="title" class="form-control form-control-lg"
+                    placeholder="e.g. Grandma's Famous Lasagna" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="summary" class="form-label fw-bold">Summary</label>
+                <textarea id="summary" name="summary" class="form-control" rows="3"
+                    placeholder="A brief description of your dish..."></textarea>
+            </div>
+
+            <div class="mb-4">
+                <label for="image" class="form-label fw-bold">Recipe Photo</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-image text-success"></i></span>
+                    <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                </div>
+                <div class="form-text">Choose a high-quality photo to make your recipe stand out!</div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Ingredients</label>
+                    <div class="form-text mb-1">Format: Item : Amount (One per line)</div>
+                    <textarea name="ingredients_text" class="form-control" rows="6"
+                        placeholder="Flour : 2 cups&#10;Sugar : 1 cup"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Instructions</label>
+                    <div class="form-text mb-1">One step per line</div>
+                    <textarea name="steps_text" class="form-control" rows="6"
+                        placeholder="Preheat the oven...&#10;Mix dry ingredients..."></textarea>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-sm-4">
+                    <label class="form-label fw-bold">Time (mins)</label>
+                    <input type="number" name="time" class="form-control" placeholder="30">
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label fw-bold">Category</label>
+                    <select name="category" class="form-select">
+                        {% for c in categories %} <option value="{{c.id}}">{{c.name}}</option> {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label fw-bold">Difficulty</label>
+                    <select name="level" class="form-select">
+                        {% for l in levels %} <option value="{{l.id}}">{{l.level_name}}</option> {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg w-100 shadow-sm">
+                <i class="bi bi-check-circle me-2"></i>Save Recipe
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

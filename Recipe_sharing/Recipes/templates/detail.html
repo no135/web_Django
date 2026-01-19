@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if recipe.image %}
+<div class="mb-4">
+    <img src="{{ recipe.image.url }}" class="recipe-img-main shadow-sm" alt="{{ recipe.title }}">
+</div>
+{% endif %}
+
+<h1 class="display-5 fw-bold">{{ recipe.title }}</h1>
+
+<div class="d-flex flex-wrap gap-3 text-secondary mb-4">
+    <span><i class="bi bi-tag text-success"></i> {{ recipe.category.name }}</span>
+    <span><i class="bi bi-bar-chart-steps text-success"></i> {{ recipe.level.level_name }}</span>
+    <span><i class="bi bi-clock text-success"></i> {{ recipe.cooking_time }} minutes</span>
+</div>
+
+<p class="lead text-muted mb-5">{{ recipe.summary }}</p>
+
+<div class="row g-5">
+    <div class="col-md-5">
+        <div class="bg-light p-4 rounded border shadow-sm h-100">
+            <h3 class="h5 fw-bold mb-3"><i class="bi bi-basket2-fill me-2"></i>Ingredients</h3>
+            <ul class="list-unstyled mb-0">
+                {% for ing in recipe.ingredients.all %}
+                <li class="py-2 border-bottom border-white">
+                    <i class="bi bi-check2 text-success me-2"></i>
+                    <strong>{{ ing.item_name }}</strong>: {{ ing.amount }}
+                </li>
+                {% empty %}
+                <li>No ingredients listed.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <h3 class="h5 fw-bold mb-3"><i class="bi bi-list-ol me-2"></i>Instructions</h3>
+        <div class="list-group list-group-flush">
+            {% for step in recipe.steps.all %}
+            <div class="list-group-item bg-transparent px-0 border-0 mb-3">
+                <div class="d-flex">
+                    <span class="badge bg-success rounded-circle me-3 d-flex align-items-center justify-content-center"
+                        style="width: 28px; height: 28px;">{{ step.step_number }}</span>
+                    <p class="mb-0">{{ step.description }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <p>No instructions listed.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<hr class="my-5">
+
+<h3 class="h5 fw-bold mb-4"><i class="bi bi-chat-left-text me-2"></i>Feedback & Comments</h3>
+<div class="mb-5">
+    {% for comment in recipe.comments.all %}
+    <div class="bg-light p-3 rounded mb-3 border-start border-success border-4">
+        <div class="d-flex justify-content-between align-items-center">
+            <strong class="text-dark">{{ comment.visitor_name }}</strong>
+            <small class="text-muted"><i class="bi bi-calendar-event me-1"></i>{{ comment.date_added|date:"M d, Y"
+                }}</small>
+        </div>
+        <p class="mb-0 mt-2 text-secondary">{{ comment.comment_text }}</p>
+    </div>
+    {% empty %}
+    <p class="text-muted">No feedback yet. Be the first to share your thoughts!</p>
+    {% endfor %}
+</div>
+
+<div class="card p-4 bg-dark text-white border-0 shadow">
+    <h4 class="h6 fw-bold mb-3">Leave a Comment</h4>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <input type="text" name="name" class="form-control bg-light" placeholder="Your Name" required>
+        </div>
+        <div class="mb-3">
+            <textarea name="comment" class="form-control bg-light" placeholder="How did it taste?" required
+                rows="3"></textarea>
+        </div>
+        <button type="submit" class="btn btn-success w-100 fw-bold">Post Comment</button>
+    </form>
+</div>
+{% endblock %}
