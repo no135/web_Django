@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Technician | {{ technician.name }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .edit-card {
+            max-width: 550px;
+            margin: 60px auto;
+            border: none;
+            border-radius: 12px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #495057;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <nav class="mt-4" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'order' %}" class="text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'technician_list' %}"
+                        class="text-decoration-none">Technicians</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+            </ol>
+        </nav>
+
+        <div class="card edit-card shadow-sm">
+            <div class="card-header bg-warning py-3 text-center">
+                <h1 class="h4 mb-0 text-dark">
+                    <i class="bi bi-person-gear me-2"></i>Edit Technician
+                </h1>
+            </div>
+
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <div class="rounded-circle bg-secondary text-white d-inline-flex justify-content-center align-items-center mb-2"
+                        style="width: 60px; height: 60px; font-size: 1.5rem;">
+                        {{ technician.name|slice:":1"|upper }}
+                    </div>
+                    <h5 class="mb-0">{{ technician.name }}</h5>
+                    <small class="text-muted">ID: {{ technician.id|default:"N/A" }}</small>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="techName" class="form-label">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" id="techName" name="name" class="form-control"
+                                value="{{ technician.name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="techSpec" class="form-label">Speciality</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                            <select id="techSpec" name="speciality" class="form-select">
+                                {% for spec in specialities %}
+                                <option value="{{ spec.name }}" >
+                                    {{ spec.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-warning fw-bold">Update Technician</button>
+                        <a href="{% url 'technician_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

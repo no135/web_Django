@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Management - Orders</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f4f7f6;
+        }
+
+        .order-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            height: 100%;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .order-img {
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'order' %}">Maintainance Manager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'order' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'add_order' %}">Add Order</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'asset_list' %}">Assets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'technician_list' %}">Technicians</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'category_list' %}">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'speciality_list' %}">Speciality</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold text-dark">Maintenance Orders</h1>
+            <a href="{% url 'add_order' %}" class="btn btn-primary">+ Create New Order</a>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for order in orders %}
+            <div class="col">
+                <div class="card order-card shadow-sm h-100">
+                    <img src="{{ order.image.url }}" class="card-img-top order-img" alt="{{ order.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-truncate">{{ order.name }}</h5>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Asset:</small>
+                            <span class="fw-medium">{{ order.asset.name }}</span>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted d-block">Assigned Technician:</small>
+                            <span class="badge bg-light text-dark border">{{ order.technician.name }}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <a href="{% url 'order_detail' order.name %}" class="btn btn-outline-primary w-100">View
+                            Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

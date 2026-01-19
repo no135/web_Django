@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .table thead th {
+            border-top: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'order' %}">Manager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'order' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'add_order' %}">Add Order</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'asset_list' %}">Assets</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'technician_list' %}">Technicians</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'category_list' %}">Categories</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'speciality_list' %}">Speciality</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="category-card shadow-sm">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="h4 mb-0 fw-bold">Property Categories</h2>
+                    <span class="badge bg-secondary-soft text-dark border">{{ categories|length }} Total</span>
+                </div>
+                <a href="{% url 'add_category' %}" class="btn btn-outline-primary btn-sm">
+                    + Add New Category
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Category Name</th>
+                            <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cat in categories %}
+                        <tr>
+                            <td class="fw-medium text-primary">
+                                <i class="bi bi-tag-fill me-2"></i> {{ cat.name }}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'edit_category' cat.name %}"
+                                    class="btn btn-sm btn-link text-decoration-none">Edit</a>
+                                <span class="text-muted">|</span>
+                                <a href="{% url 'delete_category' cat.name %}"
+                                    class="btn btn-sm btn-link text-danger text-decoration-none"
+                                    onclick="return confirm('Are you sure you want to delete this category?')">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
