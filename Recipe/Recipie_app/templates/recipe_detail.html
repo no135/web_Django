@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ recipe.title }} - Recipe Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4">
+        <a class="navbar-brand font-weight-bold" href="{% url 'home' %}">Recipe Sharing</a>
+        <div class="navbar-nav ms-auto">
+            {% if request.session.role == 'User' %}
+            <a class="nav-link" href="{% url 'my_recipes' %}">My Kitchen</a>
+            {% elif request.session.role == 'Admin' %}
+            <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+            {% endif %}
+    
+            {% if request.session.user_id %}
+            <a class="nav-link" href="{% url 'home' %}">Browse</a>
+            <a class="nav-link" href="{% url 'profile' %}">Settings</a>
+    
+            <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+            {% else %}
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            <a class="btn btn-primary btn-sm ms-2" href="{% url 'register' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row mt-3">
+            <div class="col-md-8">
+                <h1>{{ recipe.title }}</h1>
+                {% if recipe.category %}
+                <span class="badge badge-info">
+                    Category: <strong>{{ recipe.category.name }}</strong>
+                </span>
+                {% else %}
+                <span class="text-muted">Uncategorized</span>
+                {% endif %}
+                <p class="text-secondary">Submitted on {{ recipe.created_on|date:"M d, Y" }}</p>
+                
+                {% if recipe.image %}
+                <div class="mb-4">
+                    <img src="{{ recipe.image.url }}" class="img-fluid rounded shadow-sm" alt="{{ recipe.title }}">
+                </div>
+                {% endif %}
+                
+                <hr>
+                <h4>Ingredients</h4>
+                <p>{{ recipe.ingredients|linebreaks }}</p>
+                <hr>
+                <h4>Instructions</h4>
+                <p>{{ recipe.instructions|linebreaks }}</p>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card p-3 mb-4">
+                    <h5>Interact</h5>
+                    <a href="{% url 'add_to_favorites' recipe.id %}" class="btn btn-outline-danger mb-2">❤ Save to
+                        Favorites</a>
+                    <form action="{% url 'rate_recipe' recipe.id %}" method="POST" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        <select name="stars" class="form-select me-2">
+                            <option value="5">5 Stars</option>
+                            <option value="4">4 Stars</option>
+                            <option value="3">3 Stars</option>
+                            <option value="3">2 Stars</option>
+                            <option value="3">1 Stars</option>
+
+
+                        </select>
+                        <button class="btn btn-warning">Rate</button>
+                    </form>
+                </div>
+
+                <h5>Comments</h5>
+                {% for comment in comments %}
+                <div class="border-bottom mb-2 pb-2">
+                    <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
+                </div>
+                {% endfor %}
+
+                {% if request.session.user_id %}
+                <form method="POST" class="mt-3">
+                    {% csrf_token %}
+                    <textarea name="comment" class="form-control mb-2" placeholder="Write a comment..."
+                        required></textarea>
+                    <button class="btn btn-dark btn-sm">Post Comment</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

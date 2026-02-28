@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Profile</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body class="bg-light">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4">
+            <a class="navbar-brand font-weight-bold" href="{% url 'home' %}">Recipe Sharing</a>
+            <div class="navbar-nav ms-auto">
+                {% if request.session.role == 'User' %}
+                <a class="nav-link" href="{% url 'my_recipes' %}">My Kitchen</a>
+                {% elif request.session.role == 'Admin' %}
+                <a class="nav-link" href="{% url 'admin_dashboard' %}">Admin Dashboard</a>
+                {% endif %}
+        
+                {% if request.session.user_id %}
+                <a class="nav-link" href="{% url 'home' %}">Browse</a>
+                <a class="nav-link" href="{% url 'profile' %}">Settings</a>
+        
+                <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Login</a>
+                <a class="btn btn-primary btn-sm ms-2" href="{% url 'register' %}">Sign Up</a>
+                {% endif %}
+            </div>
+        </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 card shadow p-4">
+                <h3>Profile Settings</h3>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="text-muted">Username</label>
+                        <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-muted">Account Role</label>
+                        <input type="text" class="form-control" value="{{ user.role.name }}" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label>Email Address</label>
+                        <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label>New Password</label>
+                        <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+                        <small class="text-muted">Only enter a value if you want to change your password.</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary">Go to Home</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
