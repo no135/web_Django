@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Parking Management System</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">Parking System</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'home' %}">Lots</a>
+                <a class="nav-link" href="{% url 'active_tickets' %}">Active Tickets</a>
+                <a class="nav-link" href="{% url 'vehicle_list' %}">Vehicles</a>
+                <a class="nav-link" href="{% url 'payment_history' %}">Payments</a>
+                <a class="nav-link text-danger" href="{% url 'revenue_stats' %}">Revenue</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h2>{{ lot.name }} - Spots</h2>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    {% for spot in spots %}
+                    <div class="col-2 mb-2">
+                        <div
+                            class="card {% if spot.is_available %}bg-success{% else %}bg-danger{% endif %} text-white text-center">
+                            <div class="card-body">
+                                <a href="{% url 'maintenance_toggle' spot.id %}" class="btn btn-sm btn-light mt-1">Spot #{{ spot.spot_no }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        
+            <div class="col-md-4">
+                <h4>Vehicle Check-in</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="owner_name" class="form-control mb-2" placeholder="Owner Name" required>
+                    <input type="text" name="plate_no" class="form-control mb-2" placeholder="Plate Number" required>
+                    <select name="spot_id" class="form-control mb-2">
+                        {% for spot in spots %}
+                        {% if spot.is_available %}
+                        <option value="{{ spot.id }}">Spot #{{ spot.spot_no }}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary w-100">Issue Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
